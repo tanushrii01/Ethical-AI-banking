@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Profile | TrustBank AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="logo"><span style="font-size: 1.5rem;">🏦</span><span>TrustBank AI</span></div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <a href="login.html"><button class="btn-logout">Logout</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="dashboard.html"><button class="btn btn-secondary">← Back to Dashboard</button></a>
+        <h1 class="page-title" style="margin-top:1rem;">My AI Profile</h1>
+        <p class="page-subtitle">What the AI understands about you</p>
+
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">AI Assessment</h3></div>
+            <div style="display:grid;gap:1.5rem;">
+                <div><strong>Income Stability:</strong> Very Stable <button onclick="requestCorrection('income')" class="btn btn-secondary btn-small">Request Correction</button></div>
+                <div><strong>Spending Pattern:</strong> Responsible <button onclick="requestCorrection('spending')" class="btn btn-secondary btn-small">Request Correction</button></div>
+                <div><strong>Repayment:</strong> Excellent <button onclick="requestCorrection('repayment')" class="btn btn-secondary btn-small">Request Correction</button></div>
+                <div><strong>Financial Growth:</strong> Positive <button onclick="requestCorrection('growth')" class="btn btn-secondary btn-small">Request Correction</button></div>
+            </div>
+        </div>
+
+        <div class="alert alert-info"><strong>ℹ️ Note:</strong> If anything is incorrect, request correction and it will be reviewed manually.</div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>

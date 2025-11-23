@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Review | TrustBank AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header admin">
+    <div class="header-content">
+        <div class="logo"><span style="font-size: 1.5rem;">🧑‍⚖️</span><span>AI Human Review Board</span></div>
+        <div class="user-info">
+            <div class="user-avatar">AD</div>
+            <a href="login.html"><button class="btn-logout">Logout</button></a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <a href="governance.html"><button class="btn btn-secondary">← Back to Governance</button></a>
+    <h1 class="page-title" style="margin-top:1rem;">Pending Human Review Requests</h1>
+    <p class="page-subtitle">AI-flagged corrections requested by customers</p>
+
+    <div class="card">
+        <div class="card-header"><h3 class="card-title">Correction Requests Queue</h3></div>
+        <table class="review-table">
+            <tr><th>Customer</th><th>Issue</th><th>Status</th><th>Action</th></tr>
+            <tr><td>John Doe</td><td>Income Stability</td><td>Pending</td><td><button class="btn btn-primary" onclick="resolveRequest(this)">Resolve</button></td></tr>
+            <tr><td>Emily Clark</td><td>Spending Pattern</td><td>Pending</td><td><button class="btn btn-primary" onclick="resolveRequest(this)">Resolve</button></td></tr>
+            <tr><td>Alex Smith</td><td>Repayment Accuracy</td><td>Pending</td><td><button class="btn btn-primary" onclick="resolveRequest(this)">Resolve</button></td></tr>
+        </table>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

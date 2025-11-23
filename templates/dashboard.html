@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TrustBank AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo"><span style="font-size: 1.5rem;">🏦</span><span>TrustBank AI</span></div>
+            <div class="user-info">
+                <span style="font-weight: 500;" id="customerName">John Doe</span>
+                <div class="user-avatar">JD</div>
+                <a href="login.html"><button class="btn-logout">Logout</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">My Dashboard</h1>
+        <p class="page-subtitle">Overview of your account and AI-powered insights</p>
+
+        <div class="stats-grid">
+            <a href="loan_explanation.html" style="text-decoration:none;color:inherit;">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#dbeafe;color:#2563eb;">💳</div>
+                    <div class="stat-label">Loan Status</div>
+                    <div class="stat-value">Approved</div>
+                    <span class="badge badge-info">Click to see why</span>
+                </div>
+            </a>
+            <div class="stat-card"><div class="stat-icon" style="background:#d1fae5;color:#10b981;">📊</div><div class="stat-label">AI Risk Score</div><div class="stat-value">782</div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#f59e0b;">🛡️</div><div class="stat-label">Fraud Alerts</div><div class="stat-value">0</div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#e0e7ff;color:#6366f1;">💰</div><div class="stat-label">Spending This Month</div><div class="stat-value">$3,240</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">Quick Actions</h3></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+                <a href="loan_explanation.html"><button class="btn btn-primary">📝 Explain My Loan</button></a>
+                <a href="consent.html"><button class="btn btn-primary">🔒 Data Consent</button></a>
+                <a href="profile.html"><button class="btn btn-primary">👤 AI Profile</button></a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

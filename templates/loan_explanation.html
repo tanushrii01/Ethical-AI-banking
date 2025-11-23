@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Explanation | TrustBank AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="logo"><span style="font-size: 1.5rem;">🏦</span><span>TrustBank AI</span></div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <a href="login.html"><button class="btn-logout">Logout</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="dashboard.html"><button class="btn btn-secondary" style="margin-bottom:1rem;">← Back to Dashboard</button></a>
+        
+        <h1 class="page-title">Loan Decision Explanation</h1>
+        <p class="page-subtitle">Understanding why your loan was approved</p>
+
+        <!-- Main Loan Result -->
+        <div class="card">
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+                <h2 style="font-size: 2rem; font-weight: 700; color: var(--success);">Loan Approved</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem;">$50,000 Credit Line</p>
+                <div style="margin-top: 1rem;"><span class="badge badge-success">87% Confidence</span></div>
+            </div>
+        </div>
+
+        <!-- Contribution Breakdown -->
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">AI Contribution Breakdown</h3></div>
+            <div class="chart-container">
+                <div class="chart-bar"><div class="chart-label">Credit Score (750)</div><div class="chart-bar-fill" style="width:35%;">35%</div></div>
+                <div class="chart-bar"><div class="chart-label">Income Stability</div><div class="chart-bar-fill" style="width:28%;">28%</div></div>
+                <div class="chart-bar"><div class="chart-label">Employment (5 yrs)</div><div class="chart-bar-fill" style="width:20%;">20%</div></div>
+                <div class="chart-bar"><div class="chart-label">Debt-to-Income (25%)</div><div class="chart-bar-fill" style="width:12%;">12%</div></div>
+                <div class="chart-bar"><div class="chart-label">Payment History</div><div class="chart-bar-fill" style="width:5%;">5%</div></div>
+            </div>
+        </div>
+
+        <!-- Risk Score -->
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">Risk Score</h3></div>
+            <p style="font-size: 1.1rem;">Your financial risk score is <strong>782 / 1000</strong>, which is considered <strong>Low Risk</strong>.</p>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Risk score does not determine approval alone but supports decision fairness.</p>
+        </div>
+
+        <!-- Transparency & Accountability -->
+        <div class="alert alert-info">
+            🔍 <strong>Transparency Statement:</strong> No sensitive attributes such as race, religion, gender, or marital status influenced this decision.
+        </div>
+
+        <!-- Data Sources -->
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">Data Sources Used</h3></div>
+            <ul style="line-height: 1.8rem;">
+                <li>Credit Bureau Records</li>
+                <li>Bank Transaction History</li>
+                <li>Employment Verification</li>
+                <li>Repayment History Across Institutions</li>
+            </ul>
+        </div>
+
+        <!-- Compliance -->
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">Policy Compliance</h3></div>
+            <p>Decision complies with:</p>
+            <ul style="line-height: 1.8rem;">
+                <li>AI Fairness Principles</li>
+                <li>Responsible Lending Act 2024</li>
+                <li>Transparency & Explainability Standard v2.1</li>
+            </ul>
+        </div>
+
+        <!-- Buttons -->
+        <div style="text-align:center; margin-top:2rem;">
+            <a href="human_review.html"><button class="btn btn-primary" style="margin-right:0.5rem;">👤 Request Human Review</button></a>
+            <a href="consent.html"><button class="btn btn-secondary">🔒 Manage Data Consent</button></a>
+        </div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>

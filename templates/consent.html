@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Consent | TrustBank AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="logo"><span style="font-size: 1.5rem;">🏦</span><span>TrustBank AI</span></div>
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <a href="login.html"><button class="btn-logout">Logout</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="dashboard.html"><button class="btn btn-secondary">← Back to Dashboard</button></a>
+        <h1 class="page-title" style="margin-top:1rem;">Data Consent & Privacy</h1>
+        <p class="page-subtitle">Control what bank AI can use</p>
+
+        <div class="alert alert-info"><strong>Your Privacy, Your Choice:</strong> Disabling data may affect AI accuracy.</div>
+
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">Data Categories</h3></div>
+
+            <div class="toggle-container"><div><div class="toggle-label">💰 Income Data</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="updateConsent('income', this.checked)"><span class="toggle-slider"></span></label></div>
+
+            <div class="toggle-container"><div><div class="toggle-label">📍 Location</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="updateConsent('location', this.checked)"><span class="toggle-slider"></span></label></div>
+
+            <div class="toggle-container"><div><div class="toggle-label">👥 Demographics</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="updateConsent('demographics', this.checked)"><span class="toggle-slider"></span></label></div>
+
+            <div class="toggle-container"><div><div class="toggle-label">💳 Spending</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="updateConsent('spending', this.checked)"><span class="toggle-slider"></span></label></div>
+
+            <div class="toggle-container"><div><div class="toggle-label">📊 Credit History</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="updateConsent('credit', this.checked)"><span class="toggle-slider"></span></label></div>
+
+            <div style="margin-top:2rem;"><button class="btn btn-primary" onclick="saveConsent()">💾 Save</button></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">Impact</h3></div>
+            <div id="consentImpact" class="alert alert-success">All enabled.</div>
+        </div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>

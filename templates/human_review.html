@@ -3,37 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Human Review | TrustBank AI</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Human Review Queue - Ethical AI Banking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
-<div class="header admin">
-    <div class="header-content">
-        <div class="logo"><span style="font-size: 1.5rem;">🧑‍⚖️</span><span>AI Human Review Board</span></div>
-        <div class="user-info">
-            <div class="user-avatar">AD</div>
-            <a href="login.html"><button class="btn-logout">Logout</button></a>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span style="font-size: 1.5rem;">🛡️</span>
+                <span>Admin Portal - AI Governance</span>
+            </div>
+            <div class="user-info">
+                <span class="user-name">{{ user.name if user else 'Admin' }}</span>
+                <div class="user-avatar">{{ user.name|initials if user else 'AD' }}</div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="container">
-    <a href="governance.html"><button class="btn btn-secondary">← Back to Governance</button></a>
-    <h1 class="page-title" style="margin-top:1rem;">Pending Human Review Requests</h1>
-    <p class="page-subtitle">AI-flagged corrections requested by customers</p>
+    <!-- Main Content -->
+    <div class="container">
+        <a href="{{ url_for('governance') }}" class="btn btn-secondary" style="margin-bottom: 1rem; display: inline-block;">← Back to Governance Dashboard</a>
+        
+        <h1 class="page-title">Human Review Queue</h1>
+        <p class="page-subtitle">Manually review AI decisions flagged for human oversight</p>
 
-    <div class="card">
-        <div class="card-header"><h3 class="card-title">Correction Requests Queue</h3></div>
-        <table class="review-table">
-            <tr><th>Customer</th><th>Issue</th><th>Status</th><th>Action</th></tr>
-            <tr><td>John Doe</td><td>Income Stability</td><td>Pending</td><td><button class="btn btn-primary" onclick="resolveRequest(this)">Resolve</button></td></tr>
-            <tr><td>Emily Clark</td><td>Spending Pattern</td><td>Pending</td><td><button class="btn btn-primary" onclick="resolveRequest(this)">Resolve</button></td></tr>
-            <tr><td>Alex Smith</td><td>Repayment Accuracy</td><td>Pending</td><td><button class="btn btn-primary" onclick="resolveRequest(this)">Resolve</button></td></tr>
-        </table>
+        <div class="alert alert-warning">
+            <strong>⚠️ 3 Decisions Pending Review:</strong> These decisions require human judgment due to edge cases or potential bias.
+        </div>
+
+        <div class="card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Case ID</th>
+                        <th>Customer</th>
+                        <th>Decision Type</th>
+                        <th>AI Decision</th>
+                        <th>Confidence</th>
+                        <th>Flag Reason</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>#8492</strong></td>
+                        <td>John Smith</td>
+                        <td>Loan Application</td>
+                        <td><span class="badge badge-danger">Denied</span></td>
+                        <td>65%</td>
+                        <td>Low confidence</td>
+                        <td>
+                            <button class="btn btn-primary btn-small" onclick="reviewCase(8492)">Review</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#8493</strong></td>
+                        <td>Sarah Johnson</td>
+                        <td>Credit Increase</td>
+                        <td><span class="badge badge-success">Approved</span></td>
+                        <td>72%</td>
+                        <td>Potential age bias</td>
+                        <td>
+                            <button class="btn btn-primary btn-small" onclick="reviewCase(8493)">Review</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>#8494</strong></td>
+                        <td>Mike Davis</td>
+                        <td>Fraud Detection</td>
+                        <td><span class="badge badge-warning">Flagged</span></td>
+                        <td>68%</td>
+                        <td>Unusual pattern</td>
+                        <td>
+                            <button class="btn btn-primary btn-small" onclick="reviewCase(8494)">Review</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Review Detail -->
+        <div id="reviewDetail" class="card" style="display: none;">
+            <div class="card-header">
+                <h3 class="card-title">Review Case #<span id="reviewCaseId"></span></h3>
+                <button class="btn btn-secondary btn-small" onclick="closeReview()">Close</button>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h4 style="font-weight: 600; margin-bottom: 1rem;">Customer Profile Summary</h4>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                        <div style="margin-bottom: 0.75rem;"><strong>Name:</strong> <span id="reviewCustomerName"></span></div>
+                        <div style="margin-bottom: 0.75rem;"><strong>Credit Score:</strong> 680</div>
+                        <div style="margin-bottom: 0.75rem;"><strong>Income:</strong> ₹65,000/year</div>
+                        <div style="margin-bottom: 0.75rem;"><strong>Employment:</strong> 3 years</div>
+                        <div><strong>Debt-to-Income:</strong> 35%</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 style="font-weight: 600; margin-bottom: 1rem;">AI Decision Reasoning</h4>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                        <div style="margin-bottom: 0.75rem;"><strong>Decision:</strong> Denied</div>
+                        <div style="margin-bottom: 0.75rem;"><strong>Confidence:</strong> 65% (Low)</div>
+                        <div style="margin-bottom: 0.75rem;"><strong>Primary Factor:</strong> High debt-to-income ratio</div>
+                        <div><strong>Flag Reason:</strong> Borderline case requiring human judgment</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <label class="form-label">Reviewer Notes</label>
+                <textarea class="form-input" id="reviewNotes" placeholder="Add your review notes here..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-success" onclick="approveDecision()">✓ Approve AI Decision</button>
+                <button class="btn btn-danger" onclick="overrideDecision()">✗ Override Decision</button>
+                <button class="btn btn-secondary" onclick="requestMoreInfo()">📋 Request More Info</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

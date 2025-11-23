@@ -3,90 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Explanation | TrustBank AI</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Loan Explanation - Ethical AI Banking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
+    <!-- Header -->
     <div class="header">
         <div class="header-content">
-            <div class="logo"><span style="font-size: 1.5rem;">🏦</span><span>TrustBank AI</span></div>
+            <div class="logo">
+                <span style="font-size: 1.5rem;">🏦</span>
+                <span>TrustBank AI</span>
+            </div>
             <div class="user-info">
-                <div class="user-avatar">JD</div>
-                <a href="login.html"><button class="btn-logout">Logout</button></a>
+                <span class="user-name">{{ user.name if user else 'User' }}</span>
+                <div class="user-avatar">{{ user.name|initials if user else 'U' }}</div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
             </div>
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="container">
-        <a href="dashboard.html"><button class="btn btn-secondary" style="margin-bottom:1rem;">← Back to Dashboard</button></a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-bottom: 1rem; display: inline-block;">← Back to Dashboard</a>
         
         <h1 class="page-title">Loan Decision Explanation</h1>
         <p class="page-subtitle">Understanding why your loan was approved</p>
 
-        <!-- Main Loan Result -->
         <div class="card">
             <div style="text-align: center; padding: 2rem;">
+                {% if loan and loan.model_decision == 'APPROVE' %}
                 <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
                 <h2 style="font-size: 2rem; font-weight: 700; color: var(--success);">Loan Approved</h2>
-                <p style="color: var(--text-secondary); font-size: 1.1rem;">$50,000 Credit Line</p>
-                <div style="margin-top: 1rem;"><span class="badge badge-success">87% Confidence</span></div>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 0.5rem;">
+                    ₹{{ "{:,}".format(loan.amount|int) }} Credit Line
+                </p>
+                <div style="margin-top: 1rem;">
+                    <span class="badge badge-success">{{ (loan.model_confidence * 100)|int }}% Confidence</span>
+                </div>
+                {% elif loan and loan.model_decision == 'REJECT' %}
+                <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
+                <h2 style="font-size: 2rem; font-weight: 700; color: var(--danger);">Loan Denied</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 0.5rem;">
+                    Application for ₹{{ "{:,}".format(loan.amount|int) }} was not approved
+                </p>
+                <div style="margin-top: 1rem;">
+                    <span class="badge badge-danger">{{ (loan.model_confidence * 100)|int }}% Confidence</span>
+                </div>
+                {% else %}
+                <div style="font-size: 4rem; margin-bottom: 1rem;">⏳</div>
+                <h2 style="font-size: 2rem; font-weight: 700; color: var(--warning);">No Loan Application</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 0.5rem;">
+                    You haven't submitted a loan application yet.
+                </p>
+                <div style="margin-top: 1rem;">
+                    <a href="{{ url_for('loan_form') }}" class="btn btn-primary">Apply for Loan</a>
+                </div>
+                {% endif %}
             </div>
         </div>
 
-        <!-- Contribution Breakdown -->
         <div class="card">
-            <div class="card-header"><h3 class="card-title">AI Contribution Breakdown</h3></div>
+            <div class="card-header">
+                <h3 class="card-title">Why This Decision? (AI Explanation)</h3>
+            </div>
+            {% if loan %}
+            <p style="margin-bottom: 1.5rem; line-height: 1.8;">Our AI analyzed your financial profile{% if loan.model_decision == 'APPROVE' %} and found you to be a low-risk borrower{% else %} and identified some areas of concern{% endif %}. Here's how each factor contributed to the decision:</p>
+
             <div class="chart-container">
-                <div class="chart-bar"><div class="chart-label">Credit Score (750)</div><div class="chart-bar-fill" style="width:35%;">35%</div></div>
-                <div class="chart-bar"><div class="chart-label">Income Stability</div><div class="chart-bar-fill" style="width:28%;">28%</div></div>
-                <div class="chart-bar"><div class="chart-label">Employment (5 yrs)</div><div class="chart-bar-fill" style="width:20%;">20%</div></div>
-                <div class="chart-bar"><div class="chart-label">Debt-to-Income (25%)</div><div class="chart-bar-fill" style="width:12%;">12%</div></div>
-                <div class="chart-bar"><div class="chart-label">Payment History</div><div class="chart-bar-fill" style="width:5%;">5%</div></div>
+                <div class="chart-bar">
+                    <div class="chart-label">Credit Score ({{ loan.credit_score }})</div>
+                    <div class="chart-bar-fill" style="width: {% if loan.credit_score >= 750 %}35{% elif loan.credit_score >= 700 %}30{% elif loan.credit_score >= 650 %}25{% else %}20{% endif %}%;">
+                        {% if loan.credit_score >= 750 %}35{% elif loan.credit_score >= 700 %}30{% elif loan.credit_score >= 650 %}25{% else %}20{% endif %}% Impact
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">Annual Income (₹{{ "{:,}".format(loan.income|int) }})</div>
+                    <div class="chart-bar-fill" style="width: {% if loan.income >= 100000 %}28{% elif loan.income >= 50000 %}25{% else %}20{% endif %}%;">
+                        {% if loan.income >= 100000 %}28{% elif loan.income >= 50000 %}25{% else %}20{% endif %}% Impact
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">Employment ({{ loan.employment_years }} years)</div>
+                    <div class="chart-bar-fill" style="width: {% if loan.employment_years >= 5 %}20{% elif loan.employment_years >= 3 %}15{% else %}10{% endif %}%;">
+                        {% if loan.employment_years >= 5 %}20{% elif loan.employment_years >= 3 %}15{% else %}10{% endif %}% Impact
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">Debt-to-Income ({{ (loan.debt_to_income * 100)|int }}%)</div>
+                    <div class="chart-bar-fill" style="width: {% if loan.debt_to_income < 0.3 %}12{% elif loan.debt_to_income < 0.4 %}8{% else %}5{% endif %}%;">
+                        {% if loan.debt_to_income < 0.3 %}12{% elif loan.debt_to_income < 0.4 %}8{% else %}5{% endif %}% Impact
+                    </div>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-label">Loan Amount (₹{{ "{:,}".format(loan.amount|int) }})</div>
+                    <div class="chart-bar-fill" style="width: 5%;">5% Impact</div>
+                </div>
+            </div>
+            {% else %}
+            <p style="margin-bottom: 1.5rem; line-height: 1.8;">No loan application data available. Please submit a loan application first.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">💡 Tips to Improve Your Score Further</h3>
+            </div>
+            <div class="alert alert-info">
+                <strong>Reduce Debt-to-Income Ratio:</strong> Currently at 25%. Aim for under 20% for even better rates.
+            </div>
+            <div class="alert alert-info">
+                <strong>Continue On-Time Payments:</strong> You have a perfect 100% on-time payment history. Keep it up!
+            </div>
+            <div class="alert alert-success">
+                <strong>✓ Excellent Credit Score:</strong> Your credit score of 750 is above average. This helped secure your approval!
             </div>
         </div>
 
-        <!-- Risk Score -->
         <div class="card">
-            <div class="card-header"><h3 class="card-title">Risk Score</h3></div>
-            <p style="font-size: 1.1rem;">Your financial risk score is <strong>782 / 1000</strong>, which is considered <strong>Low Risk</strong>.</p>
-            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Risk score does not determine approval alone but supports decision fairness.</p>
-        </div>
-
-        <!-- Transparency & Accountability -->
-        <div class="alert alert-info">
-            🔍 <strong>Transparency Statement:</strong> No sensitive attributes such as race, religion, gender, or marital status influenced this decision.
-        </div>
-
-        <!-- Data Sources -->
-        <div class="card">
-            <div class="card-header"><h3 class="card-title">Data Sources Used</h3></div>
-            <ul style="line-height: 1.8rem;">
-                <li>Credit Bureau Records</li>
-                <li>Bank Transaction History</li>
-                <li>Employment Verification</li>
-                <li>Repayment History Across Institutions</li>
-            </ul>
-        </div>
-
-        <!-- Compliance -->
-        <div class="card">
-            <div class="card-header"><h3 class="card-title">Policy Compliance</h3></div>
-            <p>Decision complies with:</p>
-            <ul style="line-height: 1.8rem;">
-                <li>AI Fairness Principles</li>
-                <li>Responsible Lending Act 2024</li>
-                <li>Transparency & Explainability Standard v2.1</li>
-            </ul>
-        </div>
-
-        <!-- Buttons -->
-        <div style="text-align:center; margin-top:2rem;">
-            <a href="human_review.html"><button class="btn btn-primary" style="margin-right:0.5rem;">👤 Request Human Review</button></a>
-            <a href="consent.html"><button class="btn btn-secondary">🔒 Manage Data Consent</button></a>
+            <div class="card-header">
+                <h3 class="card-title">Next Steps</h3>
+            </div>
+            <div style="display: grid; gap: 1rem;">
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2rem;">📄</div>
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Review Loan Agreement</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Review and sign your loan documents</div>
+                    </div>
+                </div>
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2rem;">💳</div>
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Set Up Direct Deposit</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Funds will be deposited within 2-3 business days</div>
+                    </div>
+                </div>
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2rem;">📅</div>
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Schedule First Payment</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">Your first payment is due on Dec 22, 2024</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-<script src="script.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

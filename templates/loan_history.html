@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Loan History - TrustBank AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🏛️</span>
+                <span>TrustBank AI</span>
+            </div>
+            <div class="user-info">
+                <span class="user-name">{{ user.name }}</span>
+                <div class="user-avatar">{{ user.name|initials }}</div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-bottom: 1rem; display: inline-block;">← Back to Dashboard</a>
+        
+        <h1 class="page-title">My Loan History</h1>
+        <p class="page-subtitle">View all your loan applications and their status</p>
+
+        {% if loans %}
+        <div class="card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Application Date</th>
+                        <th>Loan Amount</th>
+                        <th>Status</th>
+                        <th>Credit Score</th>
+                        <th>Confidence</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                    <tr>
+                        <td>{{ loan.submitted_at.strftime('%Y-%m-%d %H:%M') if loan.submitted_at else 'N/A' }}</td>
+                        <td>₹{{ "{:,}".format(loan.amount|int) }}</td>
+                        <td>
+                            {% if loan.human_override %}
+                                <span class="badge {% if loan.human_override == 'APPROVE' %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ loan.human_override }}
+                                </span>
+                            {% elif loan.model_decision %}
+                                <span class="badge {% if loan.model_decision == 'APPROVE' %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ loan.model_decision }}
+                                </span>
+                            {% else %}
+                                <span class="badge badge-warning">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ loan.credit_score }}</td>
+                        <td>
+                            {% if loan.model_confidence %}
+                                {{ (loan.model_confidence * 100)|int }}%
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('loan_explanation', loan_id=loan.id) }}" class="btn btn-primary btn-small">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="card">
+            <div style="text-align: center; padding: 3rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">📋</div>
+                <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">No Loan Applications Yet</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    You haven't submitted any loan applications. Start by applying for a loan.
+                </p>
+                <a href="{{ url_for('loan_form') }}" class="btn btn-primary">Apply for Loan</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
+

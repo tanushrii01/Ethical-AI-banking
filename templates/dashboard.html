@@ -3,49 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | TrustBank AI</title>
-    <link rel="stylesheet" href="style.css">
+    <title>My Dashboard - TrustBank AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
         <div class="header-content">
-            <div class="logo"><span style="font-size: 1.5rem;">🏦</span><span>TrustBank AI</span></div>
+            <div class="logo">
+                <span class="logo-icon">🏛️</span>
+                <span>TrustBank AI</span>
+            </div>
             <div class="user-info">
-                <span style="font-weight: 500;" id="customerName">John Doe</span>
-                <div class="user-avatar">JD</div>
-                <a href="login.html"><button class="btn-logout">Logout</button></a>
+                <span class="user-name">{{ user.name }}</span>
+                <div class="user-avatar">{{ user.name|initials }}</div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
             </div>
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="container">
         <h1 class="page-title">My Dashboard</h1>
         <p class="page-subtitle">Overview of your account and AI-powered insights</p>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Stats Grid -->
         <div class="stats-grid">
-            <a href="loan_explanation.html" style="text-decoration:none;color:inherit;">
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:#dbeafe;color:#2563eb;">💳</div>
-                    <div class="stat-label">Loan Status</div>
-                    <div class="stat-value">Approved</div>
-                    <span class="badge badge-info">Click to see why</span>
+            <!-- Loan Status Card -->
+            <div class="stat-card" style="background: #e0f2fe;">
+                <div class="stat-icon" style="background: #dbeafe; color: #2563eb;">
+                    <span style="font-size: 1.5rem;">☰</span>
                 </div>
-            </a>
-            <div class="stat-card"><div class="stat-icon" style="background:#d1fae5;color:#10b981;">📊</div><div class="stat-label">AI Risk Score</div><div class="stat-value">782</div></div>
-            <div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#f59e0b;">🛡️</div><div class="stat-label">Fraud Alerts</div><div class="stat-value">0</div></div>
-            <div class="stat-card"><div class="stat-icon" style="background:#e0e7ff;color:#6366f1;">💰</div><div class="stat-label">Spending This Month</div><div class="stat-value">$3,240</div></div>
+                <div class="stat-label">Loan Status</div>
+                {% if latest_loan %}
+                    <div class="stat-value">{{ latest_loan.model_decision if latest_loan.model_decision else 'Pending' }}</div>
+                    {% if latest_loan.model_decision == 'APPROVE' %}
+                    <div class="stat-subtitle" style="color: var(--success); margin-top: 0.5rem;">
+                        ✓ ₹{{ "{:,}".format(latest_loan.amount|int) }} Credit Line
+                    </div>
+                    <a href="{{ url_for('loan_explanation') }}" style="display: block; margin-top: 0.75rem; color: var(--primary); text-decoration: none; font-weight: 500;">
+                        Click to see why
+                    </a>
+                    {% else %}
+                    <div class="stat-subtitle" style="color: var(--text-secondary); margin-top: 0.5rem;">
+                        Application under review
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="stat-value">Not Applied</div>
+                {% endif %}
+            </div>
+
+            <!-- AI Risk Score Card -->
+            <div class="stat-card" style="background: #f0fdf4;">
+                <div class="stat-icon" style="background: #d1fae5; color: #10b981;">
+                    <span style="font-size: 1.5rem;">📊</span>
+                </div>
+                <div class="stat-label">AI Risk Score</div>
+                {% if ai_score %}
+                    <div class="stat-value">{{ ai_score }}</div>
+                {% else %}
+                    <div class="stat-value">—</div>
+                {% endif %}
+                {% if risk_score >= 750 %}
+                <div class="stat-subtitle" style="color: var(--success); margin-top: 0.5rem;">
+                    ↑ Excellent
+                </div>
+                {% elif risk_score >= 700 %}
+                <div class="stat-subtitle" style="color: var(--success); margin-top: 0.5rem;">
+                    ↑ Good
+                </div>
+                {% elif risk_score >= 650 %}
+                <div class="stat-subtitle" style="color: var(--text-secondary); margin-top: 0.5rem;">
+                    → Fair
+                </div>
+                {% elif latest_loan %}
+                <div class="stat-subtitle" style="color: var(--warning); margin-top: 0.5rem;">
+                    ↓ Needs Improvement
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Fraud Alerts Card -->
+            <div class="stat-card" style="background: #fefce8;">
+                <div class="stat-icon" style="background: #fef3c7; color: #f59e0b;">
+                    <span style="font-size: 1.5rem;">🛡️</span>
+                </div>
+                <div class="stat-label">Fraud Alerts</div>
+                <div class="stat-value">0</div>
+                <div class="stat-subtitle" style="color: var(--success); margin-top: 0.5rem;">
+                    All Clear
+                </div>
+            </div>
+
+            <!-- Spending This Month Card -->
+            <div class="stat-card" style="background: #e0f2fe;">
+                <div class="stat-icon" style="background: #dbeafe; color: #2563eb;">
+                    <span style="font-size: 1.5rem;">💰</span>
+                </div>
+                <div class="stat-label">Spending This Month</div>
+                <div class="stat-value">₹{{ "{:,}".format(spending) }}</div>
+            </div>
         </div>
 
-        <div class="card">
-            <div class="card-header"><h3 class="card-title">Quick Actions</h3></div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
-                <a href="loan_explanation.html"><button class="btn btn-primary">📝 Explain My Loan</button></a>
-                <a href="consent.html"><button class="btn btn-primary">🔒 Data Consent</button></a>
-                <a href="profile.html"><button class="btn btn-primary">👤 AI Profile</button></a>
+        <!-- Quick Actions Section -->
+        <div style="margin-top: 3rem;">
+            <h2 class="page-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">Quick Actions</h2>
+            <div class="quick-actions">
+                <a href="{{ url_for('loan_explanation') }}" class="quick-action-btn">
+                    <span style="font-size: 1.25rem; margin-bottom: 0.5rem;">📄</span>
+                    <span>Explain My Loan</span>
+                </a>
+                <a href="{{ url_for('loan_form') }}" class="quick-action-btn">
+                    <span style="font-size: 1.25rem; margin-bottom: 0.5rem;">✏️</span>
+                    <span>Apply for Loan</span>
+                </a>
+                <a href="{{ url_for('loan_history') }}" class="quick-action-btn">
+                    <span style="font-size: 1.25rem; margin-bottom: 0.5rem;">📁</span>
+                    <span>My Loan History</span>
+                </a>
+                <a href="{{ url_for('consent') }}" class="quick-action-btn">
+                    <span style="font-size: 1.25rem; margin-bottom: 0.5rem;">🔒</span>
+                    <span>Data Consent</span>
+                </a>
+                <a href="{{ url_for('profile') }}" class="quick-action-btn">
+                    <span style="font-size: 1.25rem; margin-bottom: 0.5rem;">👤</span>
+                    <span>AI Profile</span>
+                </a>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

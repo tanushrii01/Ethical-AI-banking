@@ -3,20 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error | TrustBank AI</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Error - Ethical AI Banking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
-<div class="error-container">
-    <div class="error-box">
-        <div class="error-icon">⚠️</div>
-        <h2 class="error-title">Something went wrong</h2>
-        <p class="error-text">We couldn’t complete your request. Please try again later.</p>
-        <a href="dashboard.html"><button class="btn btn-primary">Back to Dashboard</button></a>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span style="font-size: 1.5rem;">🏦</span>
+                <span>TrustBank AI</span>
+            </div>
+            <div class="user-info">
+                <span class="user-name">{{ user.name if user else 'User' }}</span>
+                <div class="user-avatar">{{ user.name|initials if user else 'U' }}</div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            </div>
+        </div>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <!-- Main Content -->
+    <div class="container">
+        <div style="text-align: center; padding: 4rem 2rem;">
+            <div style="font-size: 5rem; margin-bottom: 1.5rem;">⚠️</div>
+            <h1 class="page-title" style="text-align: center;">Something Went Wrong</h1>
+            <p class="page-subtitle" style="text-align: center;">We encountered an error while processing your request</p>
+
+            <div class="card" style="max-width: 600px; margin: 2rem auto; text-align: left;">
+                <div class="card-header">
+                    <h3 class="card-title">Error Details</h3>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Error Code:</strong> AI_DECISION_ERROR_001
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Case ID:</strong> <span id="errorCaseId">#8495</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Message:</strong> Unable to process loan application due to incomplete data
+                </div>
+                <div>
+                    <strong>Timestamp:</strong> 2024-11-22 15:45:30
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="retryAction()">🔄 Retry</button>
+                <button class="btn btn-secondary" onclick="contactSupport()">📞 Contact Support</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Go to Dashboard</a>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="alert alert-info" style="max-width: 600px; margin: 0 auto; text-align: left;">
+                    <strong>💡 What to do next:</strong><br>
+                    • Try refreshing the page<br>
+                    • Check your internet connection<br>
+                    • Contact support with your Case ID if the problem persists
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

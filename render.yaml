@@ -2,15 +2,16 @@ services:
   - type: web
     name: ethical-ai-banking
     runtime: python
+    pythonVersion: "3.11"
+
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
+
     envVars:
       - key: SECRET_KEY
-        generateValue: true          # Render auto-generates a secure random value
+        generateValue: true
       - key: DATABASE_PATH
-        value: /var/data/app.sqlite  # Points to the persistent disk below
-      - key: PYTHON_VERSION
-        value: 3.11.0
+        value: /var/data/app.sqlite
 
     disk:
       name: db-data

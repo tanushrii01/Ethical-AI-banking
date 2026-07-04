@@ -5,7 +5,8 @@ from sklearn.linear_model import LogisticRegression
 from joblib import dump, load
 import os
 
-MODEL_PATH = "model_joblib.pkl"
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "model_joblib.pkl")
 
 def _features_from_df(df):
     """

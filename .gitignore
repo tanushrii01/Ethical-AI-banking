@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# SQLite database (use Render Persistent Disk instead)
+instance/
+*.sqlite
+*.db
+
+# Environment variables
+.env
+.env.*
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE / editor files
+.vscode/
+.idea/
+*.suo
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test / debug helpers
+check_app.py
+delete_user.py
+quick_test.py
+test_db.py
+test_login.py
+test_user_flow.py
+verify_credit_score.py
+verify_currency.py
+migrate_db.py

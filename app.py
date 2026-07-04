@@ -24,13 +24,17 @@ except ImportError as e:
         return 'REJECT', 0.65, [0.65, 0.35], {}
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-change-in-production'
 
-# Database configuration
-basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, "instance")
-os.makedirs(db_path, exist_ok=True)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(db_path, "app.sqlite")}'
+# --- Security: load secret key from environment (required in production) ---
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+
+# --- Database configuration ---
+# On Render with a persistent disk, set DATABASE_PATH=/var/data/app.sqlite
+# Locally it falls back to <project>/instance/app.sqlite
+_default_db = os.path.join(app.instance_path, 'app.sqlite')
+db_file = os.environ.get('DATABASE_PATH', _default_db)
+os.makedirs(os.path.dirname(db_file), exist_ok=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_file}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)

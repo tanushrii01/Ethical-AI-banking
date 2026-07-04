@@ -1,6 +1,5 @@
 # ml.py
 import numpy as np
-import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from joblib import dump, load
 import os
@@ -32,6 +31,9 @@ def train_from_dataframe(df):
 def ensure_model_exists():
     """If model file doesn't exist, create a default baseline model trained on tiny synthetic data."""
     if not os.path.exists(MODEL_PATH):
+        # pandas is only needed here (local training fallback) — lazy import so
+        # the production server doesn't require pandas to be installed.
+        import pandas as pd
         df = pd.DataFrame([
             # income, credit_score, employment_years, debt_to_income, amount, label
             [70000, 750, 5, 0.25, 50000, 1],
@@ -40,11 +42,11 @@ def ensure_model_exists():
             [25000, 580, 1, 0.60, 10000, 0],
             [120000, 800, 10, 0.10, 150000, 1],
             [40000, 640, 2, 0.40, 20000, 0],
-            # NEW DATA: Low credit score approvals
+            # Low credit score approvals
             [45000, 350, 2, 0.30, 20000, 1],
             [35000, 320, 3, 0.25, 10000, 1],
             [55000, 400, 4, 0.35, 30000, 1],
-            # NEW DATA: Modest score approvals (around 300)
+            # Modest score approvals (around 300)
             [40000, 302, 2, 0.28, 12000, 1],
             [38000, 305, 3, 0.30, 15000, 1],
             [30000, 300, 1, 0.20, 5000, 1]

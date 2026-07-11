@@ -10,6 +10,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
+    spending = db.Column(db.Float, default=0.0)
 
     loans = db.relationship('LoanApplication', backref='user', lazy=True)
 
@@ -41,7 +42,8 @@ def init_db(app):
             admin = User(
                 name='Admin User',
                 email='admin@trustbank.com',
-                is_admin=True
+                is_admin=True,
+                spending=3240.0
             )
             admin.set_password('admin123')
             db.session.add(admin)

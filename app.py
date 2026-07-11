@@ -184,8 +184,8 @@ def dashboard():
             risk_score = max(300, base_score - 50)
         ai_score = risk_score
     
-    # Mock spending data
-    spending = 3240
+    # Get spending data from the user object (defaults to 0.0)
+    spending = user.spending if (hasattr(user, 'spending') and user.spending is not None) else 0.0
     
     return render_template('dashboard.html', 
                          user=user, 
